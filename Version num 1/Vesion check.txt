@@ -1,0 +1,11 @@
+Hello everbody.!! My name is Salomon Laota i'am 27 years old. 
+
+In my final project to my studies, me and my team maet we did a Arduio project control system.
+ We builled a code at Arduino IDE workespace.
+
+The code is written in the description code. 
+
+Also we can get from a system a feedback on how much the humdity in our gerdan and alos a feedback about the distance of the water.
+
+The project was amzaing and we get 90 grand.
+
