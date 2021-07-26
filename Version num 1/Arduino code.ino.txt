@@ -1,0 +1,83 @@
+
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+#define echoPin 12 // attach pin D2 Arduino to pin Echo of HC-SR04
+#define trigPin 11 //attach pin D3 Arduino to pin Trig of HC-SR04
+
+#define soilWet 500   // Define max value we consider soil 'wet'
+#define soilDry 750   // Define min value we consider soil 'dry'
+
+// defines variables
+float duration; // variable for the duration of sound wave travel
+float distance; // variable for the distance measurement
+int MOIST ;
+
+String str;
+int oldmos = -1;
+LiquidCrystal_I2C lcd(0x27, 16, 2); // if your LCD I2C address is not 0x27 , you should replace  0x27  with correct I2C address(i.e 0x3f)
+void setup()
+{
+
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
+  pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
+
+  Serial.begin(9600);
+  pinMode(3, INPUT);
+  pinMode(13, OUTPUT);
+  lcd.init();    // initialize the lcd
+  lcd.backlight();
+}
+void loop()
+{ 
+  
+  int  soil_mos;
+
+    soil_mos = 1023 - analogRead(A0); //get soil moisture value from A0 pin
+     soil_mos = map(soil_mos, 0, 1023, 0, 100); //convert moisture value in percentage format
+
+   Serial.print("Analog Output: ");
+     Serial.println(MOIST);
+       delay(1000);  // Take a reading every second for testing
+            // Normally you should take reading perhaps once or twice a day
+
+     Serial.println();
+
+if (oldmos != soil_mos) {     // Display the mositere on the LCD screen
+    lcd.setCursor(0, 0);
+     lcd.print("Soil Moist:");
+      lcd.print(soil_mos);
+        lcd.print("%");
+
+
+    // Clears the trigPin condition
+    digitalWrite(trigPin, LOW);
+     delayMicroseconds(2);    
+      digitalWrite(trigPin, HIGH); // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+      delayMicroseconds(10);
+      digitalWrite(trigPin, LOW);
+    
+    duration = pulseIn(echoPin, HIGH); // Reads the echoPin, returns the sound wave travel time in microseconds
+
+    
+ float distance= duration/29/2;
+ if(duration==0){
+   Serial.println("Warning: no pulse from sensor");
+   } 
+  else{
+      Serial.print("distance to nearest object:");
+      Serial.println(distance);
+      Serial.println("cm");
+  }
+ delay(100);
+ 
+    // Displays the distance on the Serial Monit
+
+    lcd.setCursor(0,1);
+    lcd.print("Distance1:");
+    lcd.print(distance/1000);
+    lcd.print("cm");
+
+
+  }
+}
